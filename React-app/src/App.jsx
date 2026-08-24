@@ -1,121 +1,58 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React,{ useState,useEffect } from "react"
+import { APIkey } from "./config"
+const App = () => {
+  // states
+const [message, setmessage] = useState([])
+const [question, setquestion] = useState("")
 
-function App() {
-  const [count, setCount] = useState(0)
+
+// functions
+function firstmessage() {
+  setmessage([{id: Date.now(), msg:"Hello! I am your AI assistant. How can I help you with your project or answer your questions today?" ,  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) , sender:"bot"}])
+}
+
+function questionMessage(e) {
+  setquestion(e.target.value)
+  setmessage([...message,{id: Date.now(), msg:{question}, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), sender:"user"}])
+}
+
+// fetch api through useeffect()
+useEffect(() => {
+  
+  const fetchResponse = async () => {
+    const API_KEY = APIkey
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin,
+          'X-OpenRouter-Title': 'My Testing App'
+        },
+        body: JSON.stringify({
+          model: 'nvidia/nemotron-3-nano-30b-a3b:free',
+          messages: [
+            { role: 'user', content: question },
+          ],
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      setmessage([...message,{id: Date.now(), msg:{data}, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), sender:"bot"}])
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+    }
+  };
+
+  if (question) {
+    fetchResponse();
+  }
+}, [question]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1 className='text-blue-500 underline text-5xl'>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="text-green-400">App</div>
   )
 }
 
