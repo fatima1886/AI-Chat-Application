@@ -1,5 +1,11 @@
 import React,{ useState,useEffect } from "react"
 import { APIkey } from "./config"
+import Sidebar from "./components/Sidebar"
+import Header from "./components/header"
+import EmptyChatState from "./components/EmptychatState"
+// import Sidebar from "./components/Sidebar"
+
+
 const App = () => {
   // states
 const [message, setmessage] = useState([])
@@ -52,7 +58,13 @@ useEffect(() => {
 }, [question]);
 
   return (
-    <div className="text-green-400">App</div>
+    <div className="flex w-screen h-screen">
+      <Sidebar/>
+     <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <Header/>
+<EmptyChatState/>
+     </div>
+    </div>
   )
 }
 
