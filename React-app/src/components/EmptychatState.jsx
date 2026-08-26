@@ -18,10 +18,10 @@ export default function EmptyChatState() {
 
       {/* 2. Core Avatar Frame */}
       {/* Added premium ease curve, overflow-hidden to clip the image, and custom shadow drop */}
-      <div className="absolute z-30 h-24 w-24 overflow-hidden rounded-2xl border-2 border-purple-500/60 bg-slate-950 shadow-2xl shadow-purple-500/10 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) hover:rotate-6 hover:scale-105 hover:border-purple-400">
+      <div className="absolute z-30  h-24 w-24 overflow-hidden rounded-2xl border-2 border-purple-500/60 bg-slate-950 shadow-2xl shadow-purple-500/10 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) hover:rotate-6 hover:scale-105 hover:border-purple-400">
         <img 
           src="/myAvatar (2).svg" 
-          className="h-full w-full object-cover transition-transform duration-500 hover:scale-110" 
+          className="h-full w-full object-cover transition-transform duration-500 hover:scale-120 absolute z-50" 
           alt="avatar" 
         />
       </div>
@@ -45,17 +45,11 @@ export default function EmptyChatState() {
                         Ask a question, brainstorm ideas, or just say hello. Your avatar assistant is ready to help!
                     </p>
 
-                    <div className="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-                        <button className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-3 text-left transition-all hover:border-indigo-500/40 hover:bg-slate-900">
-                            <span className="block text-xs font-semibold text-indigo-400">Brainstorm</span>
-                            <span className="mt-0.5 block text-xs text-slate-400 group-hover:text-slate-300">"Give me 5 business ideas..."</span>
+                    
+                        <button className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-3 text-left transition-all animate-pulse [animation-duration-3] hover:border-indigo-500/40 hover:bg-slate-900 text-indigo-400 mt-5">
+                          Start Chat
                         </button>
-
-                        <button className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-3 text-left transition-all hover:border-purple-500/40 hover:bg-slate-900">
-                            <span className="block text-xs font-semibold text-purple-400">Coding Help</span>
-                            <span className="mt-0.5 block text-xs text-slate-400 group-hover:text-slate-300">"Fix this JavaScript function..."</span>
-                        </button>
-                    </div>
+                   
                 </div>
             </div>
         </>
