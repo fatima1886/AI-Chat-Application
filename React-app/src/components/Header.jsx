@@ -1,17 +1,3 @@
-// import React from 'react'
-// import { Sparkles } from 'lucide-react';
-
-//  const Header = () => {
-//   return (
-//     <div className='flex justify-between items-center mt-0 bg-green-200 py-5 px-6'>
-// <div className='text-md text-blue-400 flex gap-2 '> <Sparkles/> <h1>AI Chatbot</h1></div>
-// <h1>hloooo</h1>
-//     </div>
-//   )
-// }
-
-// export default Header
-
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 

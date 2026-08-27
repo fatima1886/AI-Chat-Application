@@ -1,7 +1,9 @@
 import React from 'react';
 import { Radar,Telescope } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function EmptyChatState() {
+     const navigate = useNavigate();
     return (
         <>
             <div className="flex h-screen w-full flex-col items-center justify-center bg-slate-950 p-6 text-center font-sans">
@@ -46,7 +48,7 @@ export default function EmptyChatState() {
                     </p>
 
                     
-                        <button className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-3 text-left transition-all animate-pulse [animation-duration-3] hover:border-indigo-500/40 hover:bg-slate-900 text-indigo-400 mt-5">
+                        <button onClick={() => navigate('/chat')} className="group cursor-pointer rounded-xl border border-slate-800 bg-slate-900/40 p-3 text-left transition-all animate-pulse [animation-duration-3] hover:border-indigo-500/40 hover:bg-slate-900 text-indigo-400 mt-5">
                           Start Chat
                         </button>
                    
