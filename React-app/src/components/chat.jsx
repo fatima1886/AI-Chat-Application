@@ -1,21 +1,21 @@
 
-import React, {useRef, useState, useEffect } from 'react';
+
+
+import React, { useRef, useState, useEffect } from 'react';
 import { ArrowUp, User } from 'lucide-react';
 import { APIkey } from '../config';
 import ReactMarkdown from 'react-markdown';
 
-const Chat = () => {
-  const [messages, setMessages] = useState([]);
+// 1. FIXED: Wrapped props in curly braces {}
+const Chat = ({ msg, setmsg }) => {
   const [input, setInput] = useState('');
   const [question, setQuestion] = useState('');
 
-// useref
-const handleRef = useRef(null);
+  const handleRef = useRef(null);
 
-  // Generates a unique string ID for tracking state updates
   const addMessage = (msg, sender) => {
     const id = `${Date.now()}-${Math.random()}`;
-    setMessages((prev) => [
+    setmsg((prev) => [
       ...prev,
       {
         id,
@@ -47,19 +47,18 @@ const handleRef = useRef(null);
     if (!question) return;
 
     const fetchResponse = async () => {
-      // 1. FIXED LOGIC: Extract and map message history immediately using the current snapshot
-      // This guarantees the messages payload is never empty when sent to OpenRouter
-      const apiMessages = messages
-        .filter((m) => m.msg !== '') // Exclude any prior placeholder items
-        .map((msg) => ({
-          role: msg.sender === 'bot' ? 'assistant' : 'user',
-          content: msg.msg,
+      // Safely handle cases where 'msg' might briefly be undefined on initial mount
+      const safeMsg = Array.isArray(msg) ? msg : [];
+
+      const apimsg = safeMsg
+        .filter((m) => m.msg !== '') 
+        .map((m) => ({
+          role: m.sender === 'bot' ? 'assistant' : 'user',
+          content: m.msg,
         }));
 
-      // Explicitly push the active user question to keep history fluid
-      apiMessages.push({ role: 'user', content: question });
+      apimsg.push({ role: 'user', content: question });
 
-      // 2. Spawn the empty text holder for streaming feedback
       const botMessageId = addMessage('', 'bot');
 
       try {
@@ -73,7 +72,7 @@ const handleRef = useRef(null);
           },
           body: JSON.stringify({
             model: 'poolside/laguna-s-2.1:free',
-            messages: apiMessages, // <-- This now safely contains your structured text history data!
+            messages: apimsg, // 2. FIXED: Changed 'message' to 'messages'
             stream: true, 
           }),
         });
@@ -108,9 +107,9 @@ const handleRef = useRef(null);
                 if (token) {
                   accumulatedText += token;
 
-                  setMessages((prev) =>
-                    prev.map((msg) =>
-                      msg.id === botMessageId ? { ...msg, msg: accumulatedText } : msg
+                  setmsg((prev) =>
+                    prev.map((m) =>
+                      m.id === botMessageId ? { ...m, msg: accumulatedText } : m
                     )
                   );
                 }
@@ -122,9 +121,9 @@ const handleRef = useRef(null);
         }
       } catch (error) {
         console.error('Error fetching AI response:', error);
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === botMessageId ? { ...msg, msg: `Error: ${error.message}` } : msg
+        setmsg((prev) =>
+          prev.map((m) =>
+            m.id === botMessageId ? { ...m, msg: `Error: ${error.message}` } : m
           )
         );
       } finally {
@@ -135,46 +134,45 @@ const handleRef = useRef(null);
     fetchResponse();
   }, [question]);
 
-
-
   useEffect(() => {
-   handleRef.current?.scrollIntoView({behaviour: "smooth"})
-  }, [messages])
-  
+    // 3. FIXED: Changed 'behaviour' to 'behavior'
+    handleRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [msg]);
 
   return (
     <div className='w-full h-full bg-[#09070f] overflow-hidden flex flex-col'>
-      <div className='flex flex-col w-full sm:max-w-[70%] h-full py-5 mx-auto px-4 overflow-hidden scrollbar-thin scrollbar-thumb-purple-900 scrollbar-track-transparent hover:scrollbar-thumb-purple-600'>
+      <div className='flex flex-col w-full sm:max-w-[70%] h-full py-5 mx-auto px-4 overflow-hidden'>
 
-        {/* Chat window viewport pane container */}
         <section className='bg-[#120e1c] w-full flex-1 min-h-0 max-h-[400px] overflow-y-auto rounded-xl p-4 mb-4 shadow-2xl border border-slate-800/50'>
-          {messages.map((item) => (
-            <><div key={item.id} className={`flex gap-3 ${item.sender === 'bot' ? 'justify-start' : 'justify-end'} p-2`}>
-              {item.sender === 'user' ? (
-                <User className='h-10 w-10 text-yellow-400 bg-slate-800 border border-slate-700 rounded-full order-last p-3' />
-              ) : (
-                <img src="../myAvatar (2).svg" className='h-10 w-10 bg-slate-800 border border-slate-700 rounded-full' alt="AI" />
-              )}
-
-              <div className={`rounded-lg px-3 py-2 max-w-[80%] shadow-sm ${item.sender === 'bot'
-                  ? 'bg-[#1e172e] text-slate-100 border border-slate-700/40'
-                  : 'bg-purple-500 text-white'}`}>
-                {item.msg ? (
-                  <div className="prose prose-invert max-w-none text-sm leading-relaxed">
-                    <ReactMarkdown>
-                      {item.msg}
-                    </ReactMarkdown>
-                  </div>
+          {Array.isArray(msg) && msg.map((item) => (
+            <React.Fragment key={item.id}>
+              <div className={`flex gap-3 ${item.sender === 'bot' ? 'justify-start' : 'justify-end'} p-2`}>
+                {item.sender === 'user' ? (
+                  <User className='h-10 w-10 text-yellow-400 bg-slate-800 border border-slate-700 rounded-full order-last p-3' />
                 ) : (
-                  <p className="text-sm font-medium text-slate-400 whitespace-pre-wrap animate-pulse">Thinking...</p>
+                  <img src="../myAvatar (2).svg" className='h-10 w-10 bg-slate-800 border border-slate-700 rounded-full' alt="AI" />
                 )}
-                <span className='text-[10px] block text-right opacity-50 mt-1 font-mono'>{item.time}</span>
+
+                <div className={`rounded-lg px-3 py-2 max-w-[80%] shadow-sm ${item.sender === 'bot'
+                    ? 'bg-[#1e172e] text-slate-100 border border-slate-700/40'
+                    : 'bg-purple-500 text-white'}`}>
+                  {item.msg ? (
+                    <div className="prose prose-invert max-w-none text-sm leading-relaxed">
+                      <ReactMarkdown>
+                        {item.msg}
+                      </ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium text-slate-400 whitespace-pre-wrap animate-pulse">Thinking...</p>
+                  )}
+                  <span className='text-[10px] block text-right opacity-50 mt-1 font-mono'>{item.time}</span>
+                </div>
               </div>
-            </div><div ref={handleRef}></div></>
+              <div ref={handleRef}></div>
+            </React.Fragment>
           ))}
         </section>
 
-        {/* Input area element layout wrapper panel */}
         <div className='flex w-full items-center border border-slate-800 rounded-2xl bg-[#1a1429] overflow-hidden shadow-xl flex-shrink-0 focus-within:border-indigo-500/50 transition-colors duration-200'>
           <textarea
             className='bg-transparent flex-1 pl-6 pr-2 py-4 resize-none focus:outline-none text-slate-100 placeholder-slate-500 max-h-32 overflow-y-auto text-sm'
@@ -199,5 +197,3 @@ const handleRef = useRef(null);
 };
 
 export default Chat;
-
-
