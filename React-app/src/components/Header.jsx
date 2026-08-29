@@ -8,7 +8,7 @@ const Header = () => {
     <div className="relative z-20 flex justify-between items-center bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60 py-4 px-6 sticky top-0 z-50">
       
       {/* 🔮 LEFT: AI Brand Branding Frame */}
-      <div onClick={()=>{navigation('home')}} className="flex items-center gap-2.5 group cursor-pointer">
+      <div onClick={()=>{navigation('/')}} className="flex items-center gap-2.5 group cursor-pointer">
         <div className="p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-300 transition-all duration-200">
           <Sparkles size={18} className="animate-pulse" />
         </div>
