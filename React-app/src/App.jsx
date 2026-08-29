@@ -1,40 +1,49 @@
-import React,{ useState,useEffect } from "react"
-import { Routes, Route} from 'react-router-dom';
 
-import Sidebar from "./components/Sidebar"
-import Header from "./components/header"
-import EmptyChatState from "./components/EmptychatState"
+
+
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from 'react-router-dom';
+
+import Sidebar from "./components/Sidebar";
+import Header from "./components/header";
+import EmptyChatState from "./components/EmptychatState";
 import Chat from "./components/chat";
-// import Sidebar from "./components/Sidebar"
-
 
 const App = () => {
-//   // states
-const [message, setmessage] = useState([])
+  const [message, setmessage] = useState([]);
+  const navigate = useNavigate();
+
+  // Load the initial saved historical session arrays on layout mount
+  const [entirelist, setentirelist] = useState(() => {
+    const cachedData = localStorage.getItem('Global_Chat_Sessions');
+    return cachedData ? JSON.parse(cachedData) : [];
+  });
+
+  function chatrecover(session) {
+    setmessage(session);
+    navigate("/chat"); // Automatically redirect to the active workspace on item select
+  }
 
   return (
-    <><div className="flex w-screen h-screen">
-      <Sidebar  msg={message} setmsg={setmessage}  />
+    <div className="flex w-screen h-screen">
+      <Sidebar 
+        msg={message} 
+        setmsg={setmessage} 
+        list={entirelist} 
+        setlist={setentirelist} 
+        recoverchat={chatrecover} 
+      />
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Header />
-        <main className="flex-1 ">
+        <main className="flex-1">
           <Routes>
-            {/* When path is EXACTLY "/", show the welcome screen */}
             <Route index element={<EmptyChatState />} />
-            
-            {/* When path changes to "/chat", show the chat screen */}
             <Route path="chat" element={<Chat msg={message} setmsg={setmessage} />} />
           </Routes>
         </main>
-
-
-
       </div>
     </div>
-    
-    
-    </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

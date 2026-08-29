@@ -7,7 +7,7 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
  <React.StrictMode>
     <Router> {/* Open the context at the absolute top */}
-      <App />
+      <App path="home" />
     </Router>
   </React.StrictMode>
 )
