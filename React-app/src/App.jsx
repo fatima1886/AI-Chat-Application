@@ -37,7 +37,7 @@ const App = () => {
         <Header />
         <main className="flex-1">
           <Routes>
-            <Route index element={<EmptyChatState />} />
+            <Route path="home" index element={<EmptyChatState />} />
             <Route path="chat" element={<Chat msg={message} setmsg={setmessage} />} />
           </Routes>
         </main>
