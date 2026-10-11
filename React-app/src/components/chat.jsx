@@ -143,7 +143,13 @@ const Chat = ({ msg, setmsg }) => {
     <div className='w-full h-full bg-[#09070f] overflow-hidden flex flex-col'>
       <div className='flex flex-col w-full sm:max-w-[70%] h-full py-5 mx-auto px-4 overflow-hidden'>
 
-        <section className='bg-[#120e1c] w-full flex-1 min-h-0 h-full sm:max-h-[400px] overflow-y-auto rounded-xl p-4 mb-4 shadow-2xl border border-slate-800/50'>
+        <section className='bg-[#120e1c] w-full flex-1 min-h-0 h-full sm:max-h-[400px] overflow-y-auto rounded-xl p-4 mb-4 shadow-2xl border border-slate-800/50  scrollbar-thin 
+  [scrollbar-color:theme(colors.purple.400)_transparent] 
+  [&::-webkit-scrollbar]:w-1.5
+  [&::-webkit-scrollbar-track]:bg-transparent
+  [&::-webkit-scrollbar-thumb]:bg-purple-400/40
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  hover:[&::-webkit-scrollbar-thumb]:bg-purple-300"'>
           {Array.isArray(msg) && msg.map((item) => (
             <React.Fragment key={item.id}>
               <div className={`flex gap-3 ${item.sender === 'bot' ? 'justify-start' : 'justify-end'} p-2`}>
